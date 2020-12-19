@@ -4,10 +4,10 @@ from constants import *
 
 # Window Management
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Game")
+pygame.display.set_caption("Pixel Painter")
 
 
-def main(window, width, height):
+def main(window):
     pygame.init()
     clock = pygame.time.Clock()
 
@@ -22,4 +22,4 @@ def main(window, width, height):
         pygame.display.update()
 
 
-main(WINDOW, WIDTH, HEIGHT)
+main(WINDOW)
