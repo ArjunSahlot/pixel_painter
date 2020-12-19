@@ -1,2 +1,2 @@
 # pixel_painter
-A template repository that you can use.
+A pygame gui that helps you draw in a certain resolution and export as png.
