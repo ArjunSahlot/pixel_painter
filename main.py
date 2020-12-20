@@ -18,9 +18,10 @@ def main(window):
     colors = Colors(1330, 500, 225, 360)
     surf = pygame.Surface((50, 50), pygame.SRCALPHA)
     surf.fill((0, 0, 0, 0))
-    pygame.draw.rect(surf, WHITE, (19, 5, 12, 40))
     pygame.draw.rect(surf, WHITE, (5, 19, 40, 12))
-    button = ImgButton(1265, 500, 50, 50, surf)
+    minus = ImgButton(1265, 565, 50, 50, surf)
+    pygame.draw.rect(surf, WHITE, (19, 5, 12, 40))
+    plus = ImgButton(1265, 500, 50, 50, surf)
     color = picker.get_rgb()
 
     while True:
@@ -33,12 +34,16 @@ def main(window):
             color = picker.get_rgb()
         if (curr_col := colors.update(window, events)) is not None:
             color = curr_col
-        if button.update(window, events):
+        if plus.update(window, events):
             if len(colors.colors) < 20:
                 colors.colors.append(picker.get_rgb())
+        if colors.selected is not None and minus.update(window, events):
+            colors.colors.pop(colors.selected)
+            colors.selected = None
         for event in events:
             if event.type == pygame.QUIT:
                 pygame.quit()
+                colors.save()
                 return
         pygame.display.update()
 

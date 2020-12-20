@@ -11,7 +11,7 @@ class ColorPicker:
         self.slider_pos, self.slider_size, self.slider_horiz, self.slider_invert = slider_pos, slider_size, slider_horiz, slider_invert
         self.cursor_rad = cursor_rad
         self.display_rect_loc, self.display_rect_size = display_rect_loc, display_rect_size
-        self.wheel_cursor, self.slider_cursor = np.array((wheel_rad,)*2), np.array((slider_size[0]//2, slider_size[1]//2))
+        self.wheel_cursor, self.slider_cursor = np.array((wheel_rad,)*2), np.array((slider_size[0]//2, 1))
         self.slider_surf = pygame.Surface(slider_size)
         self.wheel_surf = pygame.transform.scale(
             pygame.image.load(os.path.join(os.path.realpath(os.path.dirname(__file__)), "assets", "color_picker.png")), (wheel_rad * 2,) * 2)
@@ -37,7 +37,7 @@ class ColorPicker:
                 self.wheel_cursor = (x - self.wheel_pos[0], y - self.wheel_pos[1]) if pygame.mouse.get_pressed()[0] else (self.wheel_rad,)*2
                 return True
             elif self.slider_pos[0] < x < self.slider_pos[0] + self.slider_size[0] and self.slider_pos[1] < y < self.slider_pos[1] + self.slider_size[1]:
-                self.slider_cursor[1] = y - self.slider_pos[1] if pygame.mouse.get_pressed()[0] else self.slider_size[1]//2
+                self.slider_cursor[1] = y - self.slider_pos[1] if pygame.mouse.get_pressed()[0] else 1
                 self.update_wheel()
                 return True
 
