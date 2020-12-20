@@ -7,6 +7,7 @@ class Pad:
         self.rect = rect
         self.resolution = [16, 16]
         self.colors = [[WHITE for _ in range(self.resolution[0])] for _ in range(self.resolution[1])]
+        self.surface = pygame.Surface(rect[2:], pygame.SRCALPHA)
 
     def update(self, window, picker):
         width = self.rect[2] / self.resolution[0]
@@ -22,12 +23,27 @@ class Pad:
             elif pygame.mouse.get_pressed()[2]:
                 self.colors[row][col] = WHITE
 
+    def update_res(self, res):
+        self.resolution = res
+        self.colors = [[WHITE for _ in range(self.resolution[0])] for _ in range(self.resolution[1])]
+
     def draw(self, window, width, height, start_x, start_y):
         for i, row in enumerate(self.colors):
             for j, color in enumerate(row):
-                pygame.draw.rect(window, color, (start_x + j * width, start_y + i * height, width, height))
+                pygame.draw.rect(self.surface, color, (j * width, i * height, width, height))
+
+        window.blit(self.surface, self.rect[:2])
 
         for col in range(self.resolution[0] + 1):
             pygame.draw.line(window, BLACK, (start_x + col * width, start_y), (start_x + col * width, start_y + self.rect[3]))
         for row in range(self.resolution[1] + 1):
             pygame.draw.line(window, BLACK, (start_x, start_y + row * height), (start_x + self.rect[2], start_y + row * height))
+
+    def export(self, path, window, picker, trans=True):
+        if trans:
+            for i in range(len(self.colors)):
+                for j in range(len(self.colors[i])):
+                    if sum(self.colors[i][j]) > 250*3:
+                        self.colors[i][j] = (0, 0, 0, 0)
+            self.update(window, picker)
+        pygame.image.save(self.surface, path)

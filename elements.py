@@ -2,6 +2,7 @@ import pygame
 import numpy as np
 from colorsys import rgb_to_hsv, hsv_to_rgb
 import os
+from constants import *
 pygame.init()
 
 
@@ -271,10 +272,10 @@ class ImgButton:
     bg = (110, 110, 110)
     hover = (130, 130, 130)
 
-    def __init__(self, x, y, width, height, image):
+    def __init__(self, x, y, width, height, image, paddingx=3, paddingy=3):
         self.x, self.y = x, y
         self.width, self.height = width, height
-        self.image = pygame.transform.scale(image, (width - 6, height - 6))
+        self.image = pygame.transform.scale(image, (width - paddingx*2, height - paddingy*2))
 
     def update(self, window, events):
         x, y = pygame.mouse.get_pos()
@@ -287,3 +288,28 @@ class ImgButton:
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 return pygame.Rect(self.x, self.y, self.width, self.height).collidepoint(x, y)
+
+
+class Check:
+    width = height = 50
+
+    def __init__(self, x, y, text):
+        self.x, self.y = x, y
+        self.checked = True
+        self.surf = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+        self.surf.fill((0, 0, 0, 0))
+        pygame.draw.polygon(self.surf, BLACK, [(9.7, 19.8), (3.4, 29.3), (21.5, 38.2), (45.3, 16.4), (38.6, 9.9), (22.5, 26.9)])
+        self.text_surf = pygame.font.SysFont("comicsans", self.height - 8).render(text, 1, BLACK)
+
+    def update(self, window, events):
+        self.draw(window)
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if pygame.Rect(self.x, self.y, self.width, self.height).collidepoint(event.pos):
+                    self.checked = not self.checked
+
+    def draw(self, window):
+        pygame.draw.rect(window, BLACK, (self.x, self.y, self.width, self.height), 5)
+        if self.checked:
+            window.blit(self.surf, (self.x, self.y))
+        window.blit(self.text_surf, (self.x + self.width + 8, self.y + self.height/2 - self.text_surf.get_height()/2))
