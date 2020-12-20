@@ -1,0 +1,33 @@
+import pygame
+from constants import *
+
+
+class Pad:
+    def __init__(self, rect):
+        self.rect = rect
+        self.resolution = [16, 16]
+        self.colors = [[WHITE for _ in range(self.resolution[0])] for _ in range(self.resolution[1])]
+
+    def update(self, window, picker):
+        width = self.rect[2] / self.resolution[0]
+        height = self.rect[3] / self.resolution[1]
+        start_x, start_y = self.rect[:2]
+        self.draw(window, width, height, start_x, start_y)
+        x, y = pygame.mouse.get_pos()
+        if self.rect[0] < x < self.rect[0] + self.rect[2] and self.rect[1] < y < self.rect[1] + self.rect[3]:
+            row = y // (self.rect[3] // self.resolution[1]) - 1
+            col = x // (self.rect[2] // self.resolution[0]) - 1
+            if pygame.mouse.get_pressed()[0]:
+                self.colors[row][col] = picker
+            elif pygame.mouse.get_pressed()[2]:
+                self.colors[row][col] = WHITE
+
+    def draw(self, window, width, height, start_x, start_y):
+        for i, row in enumerate(self.colors):
+            for j, color in enumerate(row):
+                pygame.draw.rect(window, color, (start_x + j * width, start_y + i * height, width, height))
+
+        for col in range(self.resolution[0] + 1):
+            pygame.draw.line(window, BLACK, (start_x + col * width, start_y), (start_x + col * width, start_y + self.rect[3]))
+        for row in range(self.resolution[1] + 1):
+            pygame.draw.line(window, BLACK, (start_x, start_y + row * height), (start_x + self.rect[2], start_y + row * height))

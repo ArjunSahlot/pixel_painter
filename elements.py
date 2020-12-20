@@ -1,18 +1,17 @@
 import pygame
 import numpy as np
 from colorsys import rgb_to_hsv, hsv_to_rgb
+import os
+pygame.init()
 
 
 class ColorPicker:
-    def __init__(self, wheel_pos, wheel_rad, slider_pos, slider_size, slider_horiz, slider_invert, cursor_rad, color1, display_rect_loc, display_rect_size=(150, 150)):
+    def __init__(self, wheel_pos, wheel_rad, slider_pos, slider_size, slider_horiz, slider_invert, cursor_rad, display_rect_loc, display_rect_size=(150, 150)):
         self.wheel_pos, self.wheel_rad = wheel_pos, wheel_rad
         self.slider_pos, self.slider_size, self.slider_horiz, self.slider_invert = slider_pos, slider_size, slider_horiz, slider_invert
         self.cursor_rad = cursor_rad
         self.display_rect_loc, self.display_rect_size = display_rect_loc, display_rect_size
-        if color1:
-            self.wheel_cursor, self.slider_cursor = np.array((123, 274)), np.array((25, 230))
-        else:
-            self.wheel_cursor, self.slider_cursor = np.array((142, 193)), np.array((25, 31))
+        self.wheel_cursor, self.slider_cursor = np.array((wheel_rad,)*2), np.array((slider_size[0]//2, slider_size[1]//2))
         self.slider_surf = pygame.Surface(slider_size)
         self.wheel_surf = pygame.transform.scale(
             pygame.image.load(os.path.join(os.path.realpath(os.path.dirname(__file__)), "assets", "color_picker.png")), (wheel_rad * 2,) * 2)
@@ -32,13 +31,15 @@ class ColorPicker:
 
     def update(self, window):
         self.draw(window)
-        if pygame.mouse.get_pressed()[0]:
+        if any(pygame.mouse.get_pressed()):
             x, y = pygame.mouse.get_pos()
             if ((self.wheel_pos[0] + self.wheel_rad - x) ** 2 + (self.wheel_pos[1] + self.wheel_rad - y) ** 2)**0.5 < self.wheel_rad - 2:
-                self.wheel_cursor = (x - self.wheel_pos[0], y - self.wheel_pos[1])
+                self.wheel_cursor = (x - self.wheel_pos[0], y - self.wheel_pos[1]) if pygame.mouse.get_pressed()[0] else (self.wheel_rad,)*2
+                return True
             elif self.slider_pos[0] < x < self.slider_pos[0] + self.slider_size[0] and self.slider_pos[1] < y < self.slider_pos[1] + self.slider_size[1]:
-                self.slider_cursor[1] = y - self.slider_pos[1]
+                self.slider_cursor[1] = y - self.slider_pos[1] if pygame.mouse.get_pressed()[0] else self.slider_size[1]//2
                 self.update_wheel()
+                return True
 
     def get_rgb(self):
         wrgb = self.wheel_surf.get_at(self.wheel_cursor)
@@ -264,3 +265,25 @@ class TextInput:
 
     def __repr__(self):
         return self.text
+
+
+class ImgButton:
+    bg = (110, 110, 110)
+    hover = (130, 130, 130)
+
+    def __init__(self, x, y, width, height, image):
+        self.x, self.y = x, y
+        self.width, self.height = width, height
+        self.image = pygame.transform.scale(image, (width - 6, height - 6))
+
+    def update(self, window, events):
+        x, y = pygame.mouse.get_pos()
+        color = self.bg
+        if self.x <= x <= self.x + self.width and self.y <= y <= self.y + self.height:
+            color = self.hover
+        pygame.draw.rect(window, color, (self.x, self.y, self.width, self.height))
+        window.blit(self.image, (self.x + self.width/2 - self.image.get_width()/2, self.y + self.height/2 - self.image.get_height()/2))
+
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                return pygame.Rect(self.x, self.y, self.width, self.height).collidepoint(x, y)
