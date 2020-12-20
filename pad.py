@@ -46,4 +46,7 @@ class Pad:
                     if sum(self.colors[i][j]) > 250*3:
                         self.colors[i][j] = (0, 0, 0, 0)
             self.update(window, picker)
-        pygame.image.save(self.surface, path)
+        try:
+            pygame.image.save(pygame.transform.scale(self.surface, self.resolution), path)
+        except TypeError:
+            pass
