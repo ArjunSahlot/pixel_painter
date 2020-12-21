@@ -4,7 +4,8 @@ from elements import *
 from pad import Pad
 from colors import Colors
 from tkinter.filedialog import asksaveasfilename
-
+from tkinter import Tk
+Tk().withdraw()
 
 # Window Management
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -29,7 +30,7 @@ def main(window):
     export = ImgButton(1250, 50, 300, 80, pygame.font.SysFont("comicsans", 100).render("Export", 1, BLACK), 25, 5)
     update = ImgButton(950, 200, 150, 50, pygame.font.SysFont("comicsans", 100).render("Update", 1, BLACK), 25, 5)
     trans = Check(1225, 140, "White as transparent")
-    res = Check(1225, 200, f"Export as {'x'.join(list(map(str, pad.resolution)))}")
+    res = Check(1250, 200, f"Export as {'x'.join(list(map(str, pad.resolution)))}")
 
     while True:
         clock.tick(FPS)
