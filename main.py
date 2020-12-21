@@ -50,7 +50,7 @@ def main(window):
             colors.selected = None
         try:
             if row_res.draw(window, events) or col_res.draw(window, events) or update.update(window, events):
-                pad.update_res([int(row_res.text), int(col_res.text)])
+                pad.update_res([int(col_res.text), int(col_res.text)])
         except ValueError:
             pass
         if export.update(window, events):

@@ -279,15 +279,18 @@ class ImgButton:
 
     def update(self, window, events):
         x, y = pygame.mouse.get_pos()
+        clicked = False
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                clicked = pygame.Rect(self.x, self.y, self.width, self.height).collidepoint(x, y)
+
         color = self.bg
-        if self.x <= x <= self.x + self.width and self.y <= y <= self.y + self.height:
+        if self.x <= x <= self.x + self.width and self.y <= y <= self.y + self.height and not clicked:
             color = self.hover
         pygame.draw.rect(window, color, (self.x, self.y, self.width, self.height))
         window.blit(self.image, (self.x + self.width/2 - self.image.get_width()/2, self.y + self.height/2 - self.image.get_height()/2))
-
-        for event in events:
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                return pygame.Rect(self.x, self.y, self.width, self.height).collidepoint(x, y)
+        
+        return clicked
 
 
 class Check:
