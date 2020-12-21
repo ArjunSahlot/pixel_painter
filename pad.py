@@ -34,10 +34,11 @@ class Pad:
 
         window.blit(self.surface, self.rect[:2])
 
-        for col in range(self.resolution[0] + 1):
-            pygame.draw.line(window, BLACK, (start_x + col * width, start_y), (start_x + col * width, start_y + self.rect[3]))
-        for row in range(self.resolution[1] + 1):
-            pygame.draw.line(window, BLACK, (start_x, start_y + row * height), (start_x + self.rect[2], start_y + row * height))
+        if self.resolution[0] <= 100 and self.resolution[1] <= 100:
+            for col in range(self.resolution[0] + 1):
+                pygame.draw.line(window, BLACK, (start_x + col * width, start_y), (start_x + col * width, start_y + self.rect[3]))
+            for row in range(self.resolution[1] + 1):
+                pygame.draw.line(window, BLACK, (start_x, start_y + row * height), (start_x + self.rect[2], start_y + row * height))
 
     def export(self, path, window, picker, trans, res):
         if trans:
