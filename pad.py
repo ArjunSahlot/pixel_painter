@@ -39,7 +39,7 @@ class Pad:
         for row in range(self.resolution[1] + 1):
             pygame.draw.line(window, BLACK, (start_x, start_y + row * height), (start_x + self.rect[2], start_y + row * height))
 
-    def export(self, path, window, picker, trans=True):
+    def export(self, path, window, picker, trans, res):
         if trans:
             for i in range(len(self.colors)):
                 for j in range(len(self.colors[i])):
@@ -47,6 +47,9 @@ class Pad:
                         self.colors[i][j] = (0, 0, 0, 0)
             self.update(window, picker)
         try:
-            pygame.image.save(pygame.transform.scale(self.surface, self.resolution), path)
+            if res:
+                pygame.image.save(pygame.transform.scale(self.surface, self.resolution), path)
+            else:
+                pygame.image.save(self.surface, path)
         except TypeError:
             pass

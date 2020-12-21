@@ -299,7 +299,7 @@ class Check:
         self.surf = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
         self.surf.fill((0, 0, 0, 0))
         pygame.draw.polygon(self.surf, BLACK, [(9.7, 19.8), (3.4, 29.3), (21.5, 38.2), (45.3, 16.4), (38.6, 9.9), (22.5, 26.9)])
-        self.text_surf = pygame.font.SysFont("comicsans", self.height - 8).render(text, 1, BLACK)
+        self.text = text
 
     def update(self, window, events):
         self.draw(window)
@@ -309,7 +309,8 @@ class Check:
                     self.checked = not self.checked
 
     def draw(self, window):
+        text_surf = pygame.font.SysFont("comicsans", self.height - 8).render(self.text, 1, BLACK)
         pygame.draw.rect(window, BLACK, (self.x, self.y, self.width, self.height), 5)
         if self.checked:
             window.blit(self.surf, (self.x, self.y))
-        window.blit(self.text_surf, (self.x + self.width + 8, self.y + self.height/2 - self.text_surf.get_height()/2))
+        window.blit(text_surf, (self.x + self.width + 8, self.y + self.height/2 - text_surf.get_height()/2))
