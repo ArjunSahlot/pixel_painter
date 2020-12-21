@@ -16,8 +16,8 @@ class Pad:
         self.draw(window, width, height, start_x, start_y)
         x, y = pygame.mouse.get_pos()
         if self.rect[0] < x < self.rect[0] + self.rect[2] and self.rect[1] < y < self.rect[1] + self.rect[3]:
-            row = (y - start_y)// (self.rect[3] // self.resolution[1])
-            col = (x - start_x) // (self.rect[2] // self.resolution[0])
+            row = int((y - start_y) / (self.rect[3] / self.resolution[1]))
+            col = int((x - start_x) / (self.rect[2] / self.resolution[0]))
             if pygame.mouse.get_pressed()[0]:
                 self.colors[row][col] = picker
             elif pygame.mouse.get_pressed()[2]:

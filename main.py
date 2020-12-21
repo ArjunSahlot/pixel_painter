@@ -28,7 +28,7 @@ def main(window):
     row_res = TextInput((900, 50), (250, 50), WHITE, label="Row resolution", max_len=2)
     col_res = TextInput((900, 125), (250, 50), WHITE, label="Column resolution", max_len=2)
     export = ImgButton(1250, 50, 300, 80, pygame.font.SysFont("comicsans", 100).render("Export", 1, BLACK), 25, 5)
-    update = ImgButton(950, 200, 150, 50, pygame.font.SysFont("comicsans", 100).render("Update", 1, BLACK), 25, 5)
+    update = ImgButton(950, 200, 150, 50, pygame.font.SysFont("comicsans", 100).render("Update", 1, BLACK), 10, 5)
     trans = Check(1225, 140, "White as transparent")
     res = Check(1250, 200, f"Export as {'x'.join(list(map(str, pad.resolution)))}")
 
@@ -51,7 +51,7 @@ def main(window):
             colors.selected = None
         try:
             if row_res.draw(window, events) or col_res.draw(window, events) or update.update(window, events):
-                pad.update_res([int(col_res.text), int(col_res.text)])
+                pad.update_res([int(col_res.text), int(row_res.text)])
         except ValueError:
             pass
         if export.update(window, events):
