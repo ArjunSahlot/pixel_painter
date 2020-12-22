@@ -9,7 +9,7 @@ class Pad:
         self.colors = [[WHITE for _ in range(self.resolution[0])] for _ in range(self.resolution[1])]
         self.surface = pygame.Surface(rect[2:], pygame.SRCALPHA)
 
-    def update(self, window, picker):
+    def update(self, window, picker, events):
         width = self.rect[2] / self.resolution[0]
         height = self.rect[3] / self.resolution[1]
         start_x, start_y = self.rect[:2]
@@ -22,6 +22,9 @@ class Pad:
                 self.colors[row][col] = picker
             elif pygame.mouse.get_pressed()[2]:
                 self.colors[row][col] = WHITE
+            for event in events:
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 2:
+                    return self.colors[row][col]
 
     def update_res(self, res):
         self.resolution = res

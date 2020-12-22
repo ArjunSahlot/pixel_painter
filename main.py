@@ -48,7 +48,11 @@ def main(window):
         clock.tick(FPS)
         window.fill(WHITE)
         events = pygame.event.get()
-        pad.update(window, color)
+        if (pad_update := pad.update(window, color, events)) is not None:
+            if len(colors.colors) < 20:
+                colors.colors.append(pad_update)
+                colors.selected = -1
+            color = pad_update
         res.text = f"Export as {'x'.join(list(map(str, pad.resolution)))}"
         if picker.update(window):
             colors.selected = None
@@ -73,8 +77,8 @@ def main(window):
         if imp.update(window, events):
             try:
                 import_name = on_import(int(row_res.text), int(col_res.text), askopenfilename(), pad)
-            except ValueError:
-                import_name = on_import(16, 16, askopenfilename(), pad)
+            except (ValueError, pygame.error, TypeError):
+                pass
 
         text = pygame.font.SysFont("comicsans", 50).render(import_name, 1, BLACK)
         window.blit(text, (imp.x + imp.width + 10, imp.y + imp.height/2 - text.get_height()/2))
