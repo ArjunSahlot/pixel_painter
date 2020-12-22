@@ -71,7 +71,7 @@ def main(window):
         except ValueError:
             pass
         if export.update(window, events):
-            pad.export(asksaveasfilename(), window, color, trans.checked, res.checked)
+            pad.export(asksaveasfilename(), window, color, trans.checked, res.checked, events)
         trans.update(window, events)
         res.update(window, events)
         if imp.update(window, events):
