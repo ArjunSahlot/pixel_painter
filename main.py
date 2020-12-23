@@ -51,7 +51,7 @@ def main(window):
         if (pad_update := pad.update(window, color, events)) is not None:
             if len(colors.colors) < 20:
                 colors.colors.append(pad_update)
-                colors.selected = -1
+                colors.selected = len(colors.colors) - 1
             color = pad_update
         res.text = f"Export as {'x'.join(list(map(str, pad.resolution)))}"
         if picker.update(window):
