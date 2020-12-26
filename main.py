@@ -64,7 +64,7 @@ def main(window):
                 colors.colors.append(picker.get_rgb())
         if colors.selected is not None and minus.update(window, events):
             colors.colors.pop(colors.selected)
-            colors.selected = 0
+            colors.selected = 0 if colors.colors else None
         try:
             if row_res.draw(window, events) or col_res.draw(window, events) or update.update(window, events):
                 pad.update_res([int(col_res.text), int(row_res.text)])
