@@ -77,7 +77,15 @@ def main(window):
         if imp.update(window, events):
             try:
                 import_name = on_import(int(row_res.text), int(col_res.text), askopenfilename(), pad)
-            except (ValueError, pygame.error, TypeError):
+
+            except ValueError:
+                try:
+                    import_name = on_import(16, 16, askopenfilename(), pad)
+
+                except (pygame.error, TypeError):
+                    pass
+
+            except (pygame.error, TypeError):
                 pass
 
         text = pygame.font.SysFont("comicsans", 50).render(import_name, 1, BLACK)
