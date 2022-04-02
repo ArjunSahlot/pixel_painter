@@ -24,6 +24,7 @@ from pad import Pad
 from colors import Colors
 from tkinter.filedialog import asksaveasfilename, askopenfilename
 from tkinter import Tk
+
 Tk().withdraw()
 
 # Window Management
@@ -37,7 +38,7 @@ def on_import(rows, cols, path, pad):
     for row in range(rows):
         for col in range(cols):
             pad.colors[row][col] = image.get_at((col, row))
-    
+
     return path.split("/")[-1]
 
 
@@ -45,7 +46,9 @@ def main(window):
     pygame.init()
     clock = pygame.time.Clock()
     pad = Pad((50, 50, 800, 800))
-    picker = ColorPicker((900, 500), 150, (1210, 500), (50, 300), False, False, 5, (900, 810), (360, 50))
+    picker = ColorPicker(
+        (900, 500), 150, (1210, 500), (50, 300), False, False, 5, (900, 810), (360, 50)
+    )
     colors = Colors(1330, 500, 225, 360)
     surf = pygame.Surface((50, 50), pygame.SRCALPHA)
     surf.fill((0, 0, 0, 0))
@@ -55,10 +58,36 @@ def main(window):
     plus = ImgButton(1265, 500, 50, 50, surf)
     color = picker.get_rgb()
     row_res = TextInput((900, 50), (250, 50), WHITE, label="Row resolution", max_len=3)
-    col_res = TextInput((900, 125), (250, 50), WHITE, label="Column resolution", max_len=3)
-    export = ImgButton(1250, 50, 300, 80, pygame.font.SysFont("comicsans", 100).render("Export", 1, BLACK), 25, 5)
-    imp = ImgButton(925, 330, 200, 70, pygame.font.SysFont("comicsans", 100).render("Import", 1, BLACK), 15, 5)
-    update = ImgButton(950, 200, 150, 50, pygame.font.SysFont("comicsans", 100).render("Update", 1, BLACK), 10, 5)
+    col_res = TextInput(
+        (900, 125), (250, 50), WHITE, label="Column resolution", max_len=3
+    )
+    export = ImgButton(
+        1250,
+        50,
+        300,
+        80,
+        pygame.font.SysFont("comicsans", 100).render("Export", 1, BLACK),
+        25,
+        5,
+    )
+    imp = ImgButton(
+        925,
+        330,
+        200,
+        70,
+        pygame.font.SysFont("comicsans", 100).render("Import", 1, BLACK),
+        15,
+        5,
+    )
+    update = ImgButton(
+        950,
+        200,
+        150,
+        50,
+        pygame.font.SysFont("comicsans", 100).render("Update", 1, BLACK),
+        10,
+        5,
+    )
     trans = Check(1225, 140, "White as transparent")
     res = Check(1250, 200, f"Export as {'x'.join(list(map(str, pad.resolution)))}")
     import_name = "No file imported"
@@ -85,17 +114,25 @@ def main(window):
             colors.colors.pop(colors.selected)
             colors.selected = 0 if colors.colors else None
         try:
-            if row_res.draw(window, events) or col_res.draw(window, events) or update.update(window, events):
+            if (
+                row_res.draw(window, events)
+                or col_res.draw(window, events)
+                or update.update(window, events)
+            ):
                 pad.update_res([int(col_res.text), int(row_res.text)])
         except ValueError:
             pass
         if export.update(window, events):
-            pad.export(asksaveasfilename(), window, color, trans.checked, res.checked, events)
+            pad.export(
+                asksaveasfilename(), window, color, trans.checked, res.checked, events
+            )
         trans.update(window, events)
         res.update(window, events)
         if imp.update(window, events):
             try:
-                import_name = on_import(int(row_res.text), int(col_res.text), askopenfilename(), pad)
+                import_name = on_import(
+                    int(row_res.text), int(col_res.text), askopenfilename(), pad
+                )
 
             except ValueError:
                 try:
@@ -108,7 +145,10 @@ def main(window):
                 pass
 
         text = pygame.font.SysFont("comicsans", 50).render(import_name, 1, BLACK)
-        window.blit(text, (imp.x + imp.width + 10, imp.y + imp.height/2 - text.get_height()/2))
+        window.blit(
+            text,
+            (imp.x + imp.width + 10, imp.y + imp.height / 2 - text.get_height() / 2),
+        )
         for event in events:
             if event.type == pygame.QUIT:
                 pygame.quit()
